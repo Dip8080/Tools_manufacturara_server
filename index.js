@@ -47,6 +47,15 @@ async function run(){
         const result = await ordersCollection.insertOne(orders);
         res.send(result);
     })
+    app.put('/user/admin/:email', async(req,res)=>{
+        const email = req.params.email;
+        const filter = {userEmail : email};
+        const updateDoc ={
+            $set: {role: 'admin'},
+        }
+        const result = await userCollection.updateOne(filter,updateDoc);
+        res.send(result)
+    })
     app.put('/user/:email', async(req,res)=>{
         const email = req.params.email;
         const filter = {userEmail : email};
@@ -61,6 +70,12 @@ async function run(){
     app.get('/user', async(req,res)=>{
         const users = await userCollection.find().toArray();
         res.send(users);
+    })
+    app.get('/admin/:email',async(req,res)=>{
+        const email =req.params.email;
+        const user = await userCollection.findOne({email:email})
+        const isAdmin = user.role === 'admin';
+        res.send({admin: isAdmingit })    
     })
 
   
